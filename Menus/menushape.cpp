@@ -95,7 +95,7 @@ Menu::Menu(string t){
 }
 void Menu::addItem(string name){
     itemsCount++;
-    items.push_back(Item(name, itemsCount));
+    items.push_back(Item(name, itemsCount));//--------this is why it's spooky, push_back adds to the end, and currently the end should be 0, but it works as if it's adding Item into index 1
 }
 void Menu::printMenu(){
     printf("%s\n", title.c_str());
