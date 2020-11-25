@@ -3,6 +3,11 @@ Caleb Favela
 Professor Azuaje
 20 November 2020
 
+Description:
+Two classes (Items and Menu) deal with menu creation, use, and selection of item. Functions called by 
+the seleciton of a menu item is dealt with seperately, including the exit option.
+Area calculations and prompts are seperate public functions specific to this program
+
 */
 
 #include <iostream>
