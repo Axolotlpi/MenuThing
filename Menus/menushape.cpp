@@ -35,9 +35,10 @@ void printExit();
 
 class Item{
     private:
-        //pointer to the Item's function
-        void (*action)();
+    //pointer to the Item's function
+    void (*action)();    
     public:
+        
         string name;
         int number;
         Item(string n, int num);
@@ -48,6 +49,7 @@ class Item{
 
 class Menu{
     int itemsCount;
+    int menuZero = 0;
     public:
         vector<Item> items;
         string title;
@@ -58,6 +60,7 @@ class Menu{
         //inputs choice with validation
         int choiceInput(string message);
         void selectItem(int itemNum);
+        Item getItemByNumber(int num);
         int getItemsCount();
 };
 
@@ -73,12 +76,12 @@ int main(){
     shapeMenu.addItem("Calculate the area of a Triangle.");
     shapeMenu.addItem("Exit Program.");
 
-    //These tie the functions to the options (functions are defined seperately)
-    shapeMenu.items[1].addAction(promptCircleArea);
-    shapeMenu.items[2].addAction(promptRectangleArea);
-    shapeMenu.items[3].addAction(promptSquareArea);
-    shapeMenu.items[4].addAction(promptTriangleArea);
-    shapeMenu.items[exitOption].addAction(printExit);
+    //adding items functions for each items index
+    shapeMenu.items.at(0).addAction(promptCircleArea);
+    shapeMenu.items.at(1).addAction(promptRectangleArea);
+    shapeMenu.items.at(2).addAction(promptSquareArea);
+    shapeMenu.items.at(3).addAction(promptTriangleArea);
+    shapeMenu.items[exitOption-1].addAction(printExit);
 
     while(itemSelected != exitOption){
         shapeMenu.printMenu();
@@ -88,39 +91,40 @@ int main(){
     return 0;
 }
 
-//implementation for class Menu
+//implementation for class Menu functions
 Menu::Menu(string t){
     title = t;
-    itemsCount =0;
+    itemsCount = menuZero;
 }
 void Menu::addItem(string name){
     itemsCount++;
-    items.push_back(Item(name, itemsCount));//--------this is why it's spooky, push_back adds to the end, and currently the end should be 0, but it works as if it's adding Item into index 1
+    items.push_back(Item(name, itemsCount));
 }
 void Menu::printMenu(){
-    printf("%s\n", title.c_str());
+    printf("%s\n\n", title.c_str());
     for(int i=0; i<items.size(); i++){
-        printf("%d. %s\n",items[i].number, items[i].name.c_str());
+        printf("%d. %s\n",items.at(i).number, items.at(i).name.c_str());
     }
 }
-int Menu::choiceInput(string message){
+int Menu::choiceInput(string message = ""){
     bool isValid = false;
     int input;
-    printf("%s (%d-%d)\n",message.c_str(), 0, itemsCount);
+    printf("%s (%d-%d)\n",message.c_str(), menuZero+1, itemsCount);
     //validation loop
     while (isValid == false){
         cin >> input;
         //check for non-integer
         if (cin.fail()){
-            //remove previous input from cin buffer
-            cin.ignore(32767,'\n');
             cout << "That is not an integer, try again:";
+            //clear flag and remove buffer values for next cin
+            cin.clear();
+            cin.ignore(32767,'\n');
         }
         //check for out of bounds
         else {
-            bool isWithinBounds = input <= itemsCount || input > 0;
-            if(!isWithinBounds){
-            cout << "That is not within bounds, try again:";
+            bool notWithinBounds = (input > itemsCount || input < menuZero+1);
+            if(notWithinBounds){
+                cout << "That is not within bounds, try again:";
             }
             else
             {
@@ -131,14 +135,17 @@ int Menu::choiceInput(string message){
     return input;
 }
 void Menu::selectItem(int itemNum){
-    //todo: add validation after figuring out why the below call words ---------------------- spooky action
-    items[itemNum].runAction();
+    // getItemByNumber(itemNum).runAction();
+    getItemByNumber(itemNum).runAction();
+}
+Item Menu::getItemByNumber(int num){
+    return items.at(menuZero+num-1);
 }
 int Menu::getItemsCount(){
     return itemsCount;
 }
 
-//Implementation for class Item
+//Implementation for class Item functions
 Item::Item(string n, int num){
     name = n;
     number = num;
@@ -148,7 +155,7 @@ void Item::addAction(void (*f)()){
     action = f;
 }
 void Item::runAction(){
-    //run function from pointer var
+    //run function from pointer reference
     action();
 }
 

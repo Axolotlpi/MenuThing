@@ -67,7 +67,7 @@ int main(){
     mathProblemMenu.addItem("Multiplication problem.");
     mathProblemMenu.addItem("Division problem.");
     mathProblemMenu.addItem("Exit program.");
-    //adding items functions for each index
+    //adding items functions for each items index
     mathProblemMenu.items.at(0).addAction(promptAdditionProblem);//this works
     mathProblemMenu.items.at(1).addAction(promptSubtractionProblem);
     mathProblemMenu.items.at(2).addAction(promptMultiplicationProblem);
