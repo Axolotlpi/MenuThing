@@ -24,11 +24,11 @@ void promptDivisionProblem();
 void printExit();
 
 class Item{
-    //private:
-        
+    private:
+    //pointer to the Item's function
+    void (*action)();    
     public:
-        //pointer to the Item's function
-        void (*action)();
+        
         string name;
         int number;
         Item(string n, int num);
@@ -39,6 +39,7 @@ class Item{
 
 class Menu{
     int itemsCount;
+    int menuZero = 0;
     public:
         vector<Item> items;
         string title;
@@ -57,20 +58,21 @@ class Menu{
 int main(){
     //input variable, and predetermined exit option
     int itemSelected = 0;
-    int exitOption = 5;
+    int exitOption = 2;
 
     Menu mathProblemMenu = Menu("Simple math problems");
     mathProblemMenu.addItem("Addition problem.");
-    mathProblemMenu.addItem("Subtraction problem.");
-    mathProblemMenu.addItem("Multiplication problem.");
-    mathProblemMenu.addItem("Division problem.");
+    // mathProblemMenu.addItem("Subtraction problem.");
+    // mathProblemMenu.addItem("Multiplication problem.");
+    // mathProblemMenu.addItem("Division problem.");
     mathProblemMenu.addItem("Exit program.");
-
-    mathProblemMenu.getItemByNumber(1).addAction(promptAdditionProblem);
-    mathProblemMenu.getItemByNumber(2).addAction(promptSubtractionProblem);
-    mathProblemMenu.getItemByNumber(3).addAction(promptMultiplicationProblem);
-    mathProblemMenu.getItemByNumber(4).addAction(promptDivisionProblem);
-    mathProblemMenu.getItemByNumber(exitOption).addAction(printExit);
+    //--------------------------------The problem so far
+    mathProblemMenu.items.at(0).addAction(promptAdditionProblem);//this works
+    mathProblemMenu.getItemByNumber(1).addAction(promptAdditionProblem);//this doesn't
+    // mathProblemMenu.getItemByNumber(2).addAction(promptSubtractionProblem);
+    // mathProblemMenu.getItemByNumber(3).addAction(promptMultiplicationProblem);
+    // mathProblemMenu.getItemByNumber(4).addAction(promptDivisionProblem);
+    //mathProblemMenu.getItemByNumber(exitOption).addAction(printExit);
 
     while(itemSelected != exitOption){
         mathProblemMenu.printMenu();
@@ -81,11 +83,14 @@ int main(){
     return 0;
 }
 
+void testPrompt(){
+    cout << "Launched testPrompt."<< endl;
+}
 
 //implementation for class Menu functions
 Menu::Menu(string t){
     title = t;
-    itemsCount =0;
+    itemsCount = menuZero;
 }
 void Menu::addItem(string name){
     itemsCount++;
@@ -100,7 +105,7 @@ void Menu::printMenu(){
 int Menu::choiceInput(string message = ""){
     bool isValid = false;
     int input;
-    printf("%s (%d-%d)\n",message.c_str(), 1, itemsCount);
+    printf("%s (%d-%d)\n",message.c_str(), menuZero+1, itemsCount);
     //validation loop
     while (isValid == false){
         cin >> input;
@@ -113,7 +118,7 @@ int Menu::choiceInput(string message = ""){
         }
         //check for out of bounds
         else {
-            bool notWithinBounds = (input > itemsCount || input < 1);
+            bool notWithinBounds = (input > itemsCount || input < menuZero+1);
             if(notWithinBounds){
                 cout << "That is not within bounds, try again:";
             }
@@ -126,16 +131,11 @@ int Menu::choiceInput(string message = ""){
     return input;
 }
 void Menu::selectItem(int itemNum){
+    // getItemByNumber(itemNum).runAction();
     getItemByNumber(itemNum).runAction();
 }
 Item Menu::getItemByNumber(int num){
-    //validate num
-    if(num <1 || num >itemsCount){
-        cout << "ItemByNumber number not found." << endl;
-    }
-    else{
-        return items.at(num-1);
-    }
+    return items.at(menuZero+num-1);
 }
 int Menu::getItemsCount(){
     return itemsCount;
@@ -180,7 +180,7 @@ void swap(int &n1, int &n2){
     n2 = temp;
 }
 int makeRandomInt(int lowest, int highest){
-    unsigned int seed = time(0);
+    unsigned int seed = time(0);//figure out how to improve
     srand(seed);
     return lowest + rand() % highest;
 }
