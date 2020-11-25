@@ -8,6 +8,7 @@ Professor Azuaje
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -58,21 +59,20 @@ class Menu{
 int main(){
     //input variable, and predetermined exit option
     int itemSelected = 0;
-    int exitOption = 2;
+    int exitOption = 5;
 
     Menu mathProblemMenu = Menu("Simple math problems");
     mathProblemMenu.addItem("Addition problem.");
-    // mathProblemMenu.addItem("Subtraction problem.");
-    // mathProblemMenu.addItem("Multiplication problem.");
-    // mathProblemMenu.addItem("Division problem.");
+    mathProblemMenu.addItem("Subtraction problem.");
+    mathProblemMenu.addItem("Multiplication problem.");
+    mathProblemMenu.addItem("Division problem.");
     mathProblemMenu.addItem("Exit program.");
-    //--------------------------------The problem so far
+    //adding items functions for each index
     mathProblemMenu.items.at(0).addAction(promptAdditionProblem);//this works
-    mathProblemMenu.getItemByNumber(1).addAction(promptAdditionProblem);//this doesn't
-    // mathProblemMenu.getItemByNumber(2).addAction(promptSubtractionProblem);
-    // mathProblemMenu.getItemByNumber(3).addAction(promptMultiplicationProblem);
-    // mathProblemMenu.getItemByNumber(4).addAction(promptDivisionProblem);
-    //mathProblemMenu.getItemByNumber(exitOption).addAction(printExit);
+    mathProblemMenu.items.at(1).addAction(promptSubtractionProblem);
+    mathProblemMenu.items.at(2).addAction(promptMultiplicationProblem);
+    mathProblemMenu.items.at(3).addAction(promptDivisionProblem);
+    mathProblemMenu.items.at(exitOption-1).addAction(printExit);
 
     while(itemSelected != exitOption){
         mathProblemMenu.printMenu();
@@ -180,8 +180,6 @@ void swap(int &n1, int &n2){
     n2 = temp;
 }
 int makeRandomInt(int lowest, int highest){
-    unsigned int seed = time(0);//figure out how to improve
-    srand(seed);
     return lowest + rand() % highest;
 }
 void printExpression(int n1, char op, int n2){
@@ -250,4 +248,4 @@ void printExit(){
     cout << "Exiting..." << endl;
 }
 
-//TODO: organize number and indexs on item vector
+//TODO: organize options and indexs on item vector
